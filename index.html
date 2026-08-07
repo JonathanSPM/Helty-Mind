@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Helty Mind - Apoyo Universitario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- PANTALLA DE LOGIN -->
+  <div id="login-page" class="page active login-container">
+    <div class="login-card">
+      <div class="logo text-center" style="font-size: 32px; margin-bottom: 10px;">🌿 Helty Mind</div>
+      <h1 class="text-center" style="margin-bottom: 25px;">Red de Apoyo Universitario</h1>
+      
+      <div class="input-group">
+        <label for="student-name">Nombre completo</label>
+        <input type="text" id="student-name" placeholder="Ej. Ana García" />
+      </div>
+      
+      <div class="input-group">
+        <label for="student-id">Matrícula Universitaria</label>
+        <input type="text" id="student-id" placeholder="Ej. 2023110033" />
+      </div>
+
+      <button class="btn-primary w-100" style="margin-top: 15px;" onclick="iniciarSesion()">Ingresar al Chat</button>
+      <p class="text-muted text-center" style="font-size: 12px; margin-top: 15px;">Tus datos son confidenciales y están protegidos por el departamento de bienestar estudiantil.</p>
+    </div>
+  </div>
+
+  <!-- PANTALLA PRINCIPAL DE CHAT -->
+  <div id="chat-page" class="page chat-layout">
+    
+    <!-- Header del Chat con nuevos botones -->
+    <header class="chat-header">
+      <div>
+        <h1 style="font-size: 22px;">Acompañamiento Helty</h1>
+        <p class="text-muted" id="user-greeting" style="font-size: 14px;">Conectado...</p>
+      </div>
+      
+      <div class="header-actions">
+        <button class="btn-breathe" onclick="abrirRespiracion()">
+          <span>🌬️</span> Respirar
+        </button>
+        <button class="btn-end" onclick="terminarSesion()">
+          <span>📝</span> Terminar sesión
+        </button>
+        <button class="btn-logout" onclick="cerrarApp()">
+          <span>🚪</span> Salir
+        </button>
+      </div>
+    </header>
+
+    <!-- Aviso Universitario -->
+    <div class="disclaimer-banner">
+      <strong>⚠️ Importante:</strong> Helty es un espacio de desahogo preliminar. Si experimentas una crisis grave, acude inmediatamente al servicio médico de tu universidad.
+    </div>
+
+    <!-- Contenedor de Mensajes -->
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages">
+        <!-- Los mensajes aparecerán aquí -->
+      </div>
+
+      <div class="quick-replies" id="quick-replies">
+        <!-- Las respuestas rápidas aparecerán dinámicamente -->
+      </div>
+
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Escribe todo lo que necesites desahogar..." onkeydown="if(event.key==='Enter') sendMessage()" />
+        <button class="btn-send" onclick="sendMessage()">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
