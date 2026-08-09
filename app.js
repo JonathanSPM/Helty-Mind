@@ -1,6 +1,7 @@
 // ─── VARIABLES GLOBALES ───
 let nombreEstudiante = "";
 let matriculaEstudiante = "";
+let historialChat = [];
 
 // ─── LÓGICA DE LOGIN Y SALIDA ───
 function iniciarSesion() {
@@ -22,6 +23,7 @@ function iniciarSesion() {
   // Limpiar chat anterior si existiera
   document.getElementById('chat-messages').innerHTML = '';
   document.getElementById('quick-replies').innerHTML = '';
+  historialChat = [];
 
   setTimeout(() => {
     const bienvenida = `¡Hola, ${nombreEstudiante}! 👋 Qué valiente eres por entrar aquí hoy. La universidad y la vida personal pueden ser abrumadoras, y a veces sentimos que tenemos que poder con todo solos, pero no es así. 🌿\n\nEste es un espacio seguro y confidencial. ¿Qué te tiene intranquilo/a hoy? Escribe todo lo que necesites desahogar. 🫂`;
@@ -122,6 +124,10 @@ function appendMessage(text, type) {
   box.appendChild(msgDiv);
   box.scrollTop = box.scrollHeight;
 
+  if (type === 'user' || type === 'bot') {
+    historialChat.push({ role: type === 'user' ? 'user' : 'assistant', content: text });
+  }
+
   // Si el bot pregunta por agendar, mostrar botones dinámicos
   if (text.includes("¿Quieres que te agende una cita con la psicóloga")) {
     document.getElementById('quick-replies').innerHTML = `
@@ -131,7 +137,7 @@ function appendMessage(text, type) {
   }
 }
 
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   
@@ -142,10 +148,25 @@ function sendMessage() {
   appendMessage(text, 'user');
   input.value = '';
 
-  setTimeout(() => {
-    const respuestaIA = getBotReply(text);
-    appendMessage(respuestaIA, 'bot');
-  }, 1200);
+  const inputButton = document.querySelector('.btn-send');
+  inputButton.disabled = true;
+  inputButton.textContent = '...';
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: historialChat })
+    });
+    if (!response.ok) throw new Error('La IA no respondió');
+    const data = await response.json();
+    appendMessage(data.reply, 'bot');
+  } catch (error) {
+    appendMessage(getBotReply(text), 'bot');
+  } finally {
+    inputButton.disabled = false;
+    inputButton.textContent = '↑';
+  }
 }
 
 function sendQuickReply(text) {
